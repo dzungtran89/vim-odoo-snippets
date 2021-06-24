@@ -255,6 +255,7 @@ snippet wizard "<wizard/>"
 endsnippet
 
 snippet wizard "transient menu"
+
 <record id="view_${1:model}_form" model="ir.ui.view">
     <field name="model">${2:Model}</field>
     <field name="arch" type="xml">
@@ -285,21 +286,23 @@ snippet wizard "transient menu"
     parent="menu_${6:menu_parent}"
     sequence="${7:20}"
     action="action_$1_view"/>
+
 endsnippet
 
 snippet wizard "transient toolbar"
+
 <record id="view_${1:model}_form" model="ir.ui.view">
     <field name="model">${2:Model}</field>
     <field name="arch" type="xml">
-<form string="${3:Label}" version="7.0">
-<separator string="$3"/>
-<label string="${5:Description}"/>
-<footer>
-<button name="generate_invoice" string="Generate Invoice" type="object" class="oe_highlight"/>
-or
-<button string="Cancel" class="oe_link" special="cancel"/>
-</footer>
-</form>
+				<form string="${3:Label}" version="7.0">
+				<separator string="$3"/>
+				<label string="${5:Description}"/>
+				<footer>
+				<button name="generate_invoice" string="Generate Invoice" type="object" class="oe_highlight"/>
+				or
+				<button string="Cancel" class="oe_link" special="cancel"/>
+				</footer>
+				</form>
     </field>
 </record>
 
@@ -322,9 +325,11 @@ or
     <field name="model">${4:Model to launch wizard}</field>
     <field name="value" eval="'ir.actions.act_window,' + str(ref('action_$1_view'))" />
 </record>
+
 endsnippet
 
 snippet iview
+
 <record id="`!p snip.rv=format_snake(t[1])`_view_${2:form}" model="ir.ui.view">
     <field name="model">${1:model}</field>
     <field name="inherit_id" ref="${4:View to inherit}" />
@@ -332,6 +337,7 @@ snippet iview
         ${5}
     </field>
 </record>
+
 endsnippet
 
 snippet view "view"
@@ -356,12 +362,12 @@ snippet view_tf "both (tree, form)"
 </record>
 
 <record id="`!p snip.rv=format_snake(t[1])`_view_form" model="ir.ui.view">
-    <field name="model">$1</field>
-    <field name="arch" type="xml">
-        <form string="$2">
-            <field name="$3"/>
-        </form>
-    </field>
+		<field name="model">$1</field>
+		<field name="arch" type="xml">
+				<form string="$2">
+						<field name="$3"/>
+				</form>
+		</field>
 </record>
 endsnippet
 
@@ -504,11 +510,15 @@ snippet view_tfsa "both (tree, form, search) + Action + Menu"
 endsnippet
 
 snippet act_window
-<act_window id="act_${1:ir_model_data}"
-    name="${2:Name}"
-    res_model="${3:destination_model}"
-    src_model="${4:source_model}"
-    domain="[('${5:field}', '${6:operator}', ${7:active_id})]"/>
+<record id="act_${1:ir_model_data}" model="ir.actions.act_window">
+		<field name="name">${2:Name}</field>
+		<field name="res_model">${3:destination_model}</field>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="${4:view_id}"/>
+		<field name="target">new</field>
+		<field name="context">{}</field>
+		<field name="binding_model_id" ref="model_${5:model}"/>
+</record>
 endsnippet
 
 snippet act_view

@@ -1,8 +1,11 @@
 global !p
-def format_description(name):
+def fm_selection(name):
+    return name.replace('_', ' ').title()
+
+def fm_desc(name):
     return name.replace('_', ' ').replace('.', ' ').title()
 
-def format_class(name):
+def fm_class(name):
     return name.replace('.', ' ').title().replace(' ', '')
 endglobal
 
@@ -12,7 +15,6 @@ endsnippet
 
 snippet itest
 from odoo.tests import SavepointCase
-
 
 class ${1}(SavepointCase):
 
@@ -86,138 +88,148 @@ snippet module
 }
 endsnippet
 
-snippet oo "Odoo Model"
-class `!p snip.rv=format_class(t[1])`(models.Model):
+snippet om "Odoo Model"
+class `!p snip.rv=fm_class(t[1])`(models.Model):
 	_name = '${1:ObjectName}'
-	_description = '`!p snip.rv=format_description(t[1])`'
+	_description = '`!p snip.rv=fm_desc(t[1])`'
 
 	${2}
 endsnippet
 
-snippet ooi "Odoo Model Inherit"
-class `!p snip.rv=format_class(t[1])`(models.Model):
+snippet omi "Odoo Model Inherit"
+class `!p snip.rv=fm_class(t[1])`(models.Model):
 	_inherit = '${1:ObjectName}'
 
 	${2}
 endsnippet
 
-snippet oow "Odoo Wizard"
-class `!p snip.rv=format_class(t[1])`(models.TransientModel):
+snippet omw "Odoo Wizard"
+class `!p snip.rv=fm_class(t[1])`(models.TransientModel):
 	_name = '${1:ObjectName}'
-	_description = '`!p snip.rv=format_description(t[1])`'
+	_description = '`!p snip.rv=fm_desc(t[1])`'
 
 	${2}
 endsnippet
 
-snippet oowi "Odoo Wizard Inherit"
-class `!p snip.rv=format_class(t[1])`(models.TransientModel):
+snippet omwi "Odoo Wizard Inherit"
+class `!p snip.rv=fm_class(t[1])`(models.TransientModel):
 	_inherit = '${1:ObjectName}'
 
 	${2}
 endsnippet
 
 snippet fch "char"
-${1:fieldname} = fields.Char(${2})
-${3}
+${1:fieldname} = fields.Char('`!p snip.rv=fm_selection(t[1])`')
+${2}
 endsnippet
 
 snippet fint "integer"
-${1:fieldname} = fields.Integer(${2})
-${3}
+${1:fieldname} = fields.Integer('`!p snip.rv=fm_selection(t[1])`')
+${2}
 endsnippet
 
 snippet ffl "float"
-${1:fieldname} = fields.Float(digits=dp.get_precision('${2:PrecisionName}')${3})
+${1:fieldname} = fields.Float(
+	'`!p snip.rv=fm_selection(t[1])`',
+	digits=dp.get_precision('${2:PrecisionName}'),
+	${3})
 ${4}
 endsnippet
 
 snippet fbo "boolean"
-${1:fieldname} = fields.Boolean(${2:})
-${3}
+${1:fieldname} = fields.Boolean('`!p snip.rv=fm_selection(t[1])`')
+${2}
 endsnippet
 
-snippet fdt "date"
-${1:fieldname} = fields.Date(${2})
-${3}
+snippet fd "date"
+${1:fieldname} = fields.Date('`!p snip.rv=fm_selection(t[1])`')
+${2}
 endsnippet
 
-snippet fdti "datetime"
-'${1:fieldname}' = fields.Datetime('${2:Label}', ${3}),${4}
+snippet fdt "datetime"
+${1:fieldname} = fields.Datetime('`!p snip.rv=fm_selection(t[1])`', ${2}),${3}
 endsnippet
 
 snippet fsl "selection"
 ${1:fieldname} = fields.Selection([
-	${2:('', '')}
+	('${2}', '`!p snip.rv=fm_selection(t[2])`'),
+	('${3}', '`!p snip.rv=fm_selection(t[3])`')
 	],
-	${3})
-${4}
+	string='`!p snip.rv=fm_selection(t[1])`', ${4})
+${5}
 `!p snip._parent.globals['last_field'] = t[1]`
 endsnippet
 
 snippet st "selection tuple"
-('${1:fieldname}', '`!p snip.rv=t[1].replace('_', ' ').title()`'),${2}
+('${1:fieldname}', '`!p snip.rv=fm_selection(t[1])`'),${2}
 endsnippet
 
 snippet fm2o "many2one"
 ${1:fieldname}_id = fields.Many2one(
 	'${2:ObjectName}',
-	'`!p snip.rv=format_description(t[1])`'${3})${4}
+	'`!p snip.rv=fm_selection(t[1])`'${3})
+${4}
 endsnippet
 
 snippet fm2m "many2many"
 ${1:fieldname}_ids = fields.Many2many(
 	comodel_name='${2:ObjectName}',
-	string='`!p snip.rv=format_description(t[1])`'${3})${4}
+	string='`!p snip.rv=fm_selection(t[1])`'${3})
+${4}
 endsnippet
 
 snippet fo2m "one2many"
 ${1:fieldname}_ids = fields.One2many(
 	'${2:object.name}',
 	'${3:fieldname}_id',
-	'`!p snip.rv=format_description(t[1])`'${4})${5}
+	'`!p snip.rv=fm_selection(t[1])`'${4})
+${5}
 endsnippet
 
 snippet fpr "property"
 ${1:fieldname}= fields.Property('${2:object}', method=${3:True},
-	string='${4:label}', type='${5:many2one}', ${7}help='${6:Help note}'),${8}
+	string='${4:label}', type='${5:many2one}', ${7}help='${6:Help note}')
+${8}
 endsnippet
 
 snippet ftx "text"
-${1:fieldname} = fields.Text(${2})${3}
+${1:fieldname} = fields.Text('`!p snip.rv=fm_selection(t[1])`')${2}
 endsnippet
 
 snippet fbin "binary"
-${1:fieldname} = fields.Binary('${2:Label}', ${4}help='${3:Help note}'),${5}
+${1:fieldname} = fields.Binary('`!p snip.rv=fm_selection(t[1])`',
+	${3}help='${2:Help note}'),${4}
 endsnippet
 
 snippet fref "reference"
-${1:fieldname}= fields.reference('${2:Label}', selection=${3:[('', '')]}, size=128, ${5}help='${4:Help note}'),${6}
+${1:fieldname} = fields.Reference('`!p snip.rv=fm_selection(t[1])`',
+	selection=${2:[('', '')]}, size=128, ${4}help='${3:Help note}'),${5}
 # Attribute for fields
 endsnippet
 
-snippet cpt "compute"
+snippet acp "compute"
 compute='_compute_`!p snip.rv=snip._parent.globals['last_field']`',
 endsnippet
 
-snippet fcpt " function compute"
+snippet fcp " function compute"
 def _compute_`!p snip.rv=snip._parent.globals['last_field']`'(self):
 	for record in self:
 endsnippet
 
-snippet cpti "compute inverse"
+snippet acpi "compute inverse"
 inverse='_inverse_`!p snip.rv=snip._parent.globals['last_field']`',
 endsnippet
 
-snippet fcpti "function compute inverse"
+snippet fcpi "function compute inverse"
 def _inverse_`!p snip.rv=snip._parent.globals['last_field']`(self):
 	for record in self:
 endsnippet
 
-snippet cpts "compute search"
+snippet afind "compute search"
 search='_search_`!p snip.rv=snip._parent.globals['last_field']`',
 endsnippet
 
-snippet fcpts "function compute search"
+snippet ffind "function compute search"
 def _search_`!p snip.rv=snip._parent.globals['last_field']`(self):
 endsnippet
 
@@ -254,14 +266,6 @@ ondelete='cascade', ${1}
 endsnippet
 
 snippet ondel "OnDelete Set Null"
-ondelete='set null', ${1}
-endsnippet
-
-snippet ondelete "OnDelete Cascade"
-ondelete='cascade', ${1}
-endsnippet
-
-snippet ondelete "OnDelete Set Null"
 ondelete='set null', ${1}
 endsnippet
 
@@ -305,7 +309,7 @@ def read(self, fields=None, context=None, load='_classic_read'):
 	if context is None:
 		context = {}
 ${1}
-	res = super(${2:ClassName}, self).read(ids, fields, )
+	res = super(${2:ClassName}, self).read(fields=fields)
 	${3}
 	return res
 endsnippet
@@ -332,25 +336,19 @@ def unlink(self):
 	# TODO make doc string
 	${2:Comment this}
 	"""
-	if context is None:
-		context = {}
-	# TODO: process before delete resource
 	${3}
-	res = super(${1:ClassName}, self).unlink(ids, )
+	res = super(${1:ClassName}, self).unlink()
 	return res
 endsnippet
 
 snippet func "def copy"
-def copy(self, id, default=None):
+def copy(self, default=None):
 	"""
 	# TODO make doc string
 	${2:Comment this}
 	"""
-	if context is None:
-		context = {}
-	# TODO: process on result
 	${3}
-	return super(${1:ClassName}, self).copy(id, default, )
+	return super(${1:ClassName}, self).copy(default)
 endsnippet
 
 snippet func "def default_get"
@@ -359,9 +357,7 @@ def default_get(self, fields_list):
 	# TODO make doc string
 	${1:Comment this}
 	"""
-	if context is None:
-		context = {}
-	values = super(${2:ClassName}, self).default_get(fields_list, )
+	values = super(${2:ClassName}, self).default_get(fields_list)
 	${3}
 	return values
 endsnippet
@@ -372,11 +368,8 @@ def fields_get(self, fields=None):
 	# TODO make doc string
 	${2:Comment this}
 	"""
-	if context is None:
-		context = {}
-	# TODO: process on result
 	${3}
-	return super(${1:ClassName}, self).fields_get(fields, context, read_access)
+	return super(${1:ClassName}, self).fields_get(fields)
 endsnippet
 
 snippet func "def init"
@@ -403,7 +396,7 @@ def name_get(self):
 		return []
 	# TODO: search on name field or _res_name fields
 	#and make a result [(id, name), (id, name), ...]
-	reads = self.read(ids, [self._rec_name], context, load='_classic_write')]
+	reads = self.read([self._rec_name], context, load='_classic_write')]
 	res = []
 	${2}
 	for read in reads:
@@ -427,7 +420,7 @@ def name_search(self, name, args=None, operator='ilike', context=None, limit=80)
 		ids = self.search([('code', 'ilike', name)] + args, limit=limit)
 	if not ids:
 		ids = self.search([('name', operator, name)] + args, limit=limit)
-	return self.name_get(ids, )
+	return self.name_get()
 	${2}
 endsnippet
 
@@ -452,35 +445,35 @@ def fields_view_get(self, view_id=None, view_type='form', context=None, toolbar=
 endsnippet
 
 snippet read
-self.read(${1:ids}, ['${2:field}'], )${3}
+self.read(${1:ids}, ['${2:field}'])${3}
 endsnippet
 
 snippet browse
-self.browse(${1:ids}, )${2}
+self.browse(${1:ids})${2}
 endsnippet
 
 snippet search
-self.search([('${1:state}', '${2:=}', '${3:done}')], )${4}
+self.search([('${1:state}', '${2:=}', '${3:done}')])${4}
 endsnippet
 
 snippet create
-id = self.create(${1:vals}, )${2}
+id = self.create(${1:vals})${2}
 endsnippet
 
 snippet write
-self.write(${1:ids}, ${2:vals}, )${3}
+self.write(${1:vals})${2}
 endsnippet
 
 snippet unlink
-self.unlink(${1:ids}, )${2}
+self.unlink(${1:ids})${2}
 endsnippet
 
 snippet copy
-self.copy(${1:ids}, ${2:default}, )${3}
+self.copy(${1:default})${2}
 endsnippet
 
 snippet perm_read
-self.perm_read([${1:id}], )${2}
+self.perm_read([${1:id}])${2}
 #
 # Define all variables in osv.osv begin by _
 #
@@ -567,15 +560,15 @@ snippet . "create"
 endsnippet
 
 snippet . "write"
-.write(${1:ids}, ${2:vals}, context=${3:context})${4}
+.write(${1:vals}, context=${2:context})${3}
 endsnippet
 
 snippet . "unlink"
-.unlink(${1:ids}, context=${2:context})${3}
+.unlink(context=${1:context})${2}
 endsnippet
 
 snippet . "copy"
-.copy(${1:id}, ${2:default}, context=${3:context})${4}
+.copy(${1:default}, context=${2:context})${3}
 ###
 ## define exception
 endsnippet
@@ -642,29 +635,29 @@ import netsvc
 logger = netsvc.Logger()
 endsnippet
 
-snippet ilogging
-import logging
-_logger = logging.getLogger(__name__)
-endsnippet
-
 snippet notify
 logger.notifyChannel('${1:module}', netsvc.${2:LOG_DEBUG}, '${3:Message}')${4}
 endsnippet
 
+snippet ilog
+import logging
+_logger = logging.getLogger(__name__)
+endsnippet
+
 snippet log "Debug"
-logger.debug('${1}')
+_logger.debug('${1}')
 endsnippet
 
 snippet log "Info"
-logger.info('${1}')
+_logger.info('${1}')
 endsnippet
 
 snippet log "Warning"
-logger.warning('${1}')
+_logger.warning('${1}')
 endsnippet
 
 snippet log "Error"
-logger.error('${1}')
+_logger.error('${1}')
 endsnippet
 
 snippet ctx
@@ -685,7 +678,7 @@ snippet fm
 endsnippet
 
 snippet super
-super(${1:ClassName}, self).${2:methodName}(${3:ids}, ${4})${5}
+super(${1:ClassName}, self).${2:methodName}(${3})${4}
 endsnippet
 
 snippet def
@@ -710,9 +703,9 @@ snippet property
 def ${1:foo}():
 	doc = "${2:The $1 property.}"
 	def fget(self):
-			${3:return self._$1}
+		${3:return self._$1}
 	def fset(self, value):
-			${4:self._$1 = value}
+		${4:self._$1 = value}
 # Lambda
 endsnippet
 
@@ -809,7 +802,7 @@ wf_service.trg_redirect(uid, '${1:model}', ${2:id}, ${3:new id}, cr)
 endsnippet
 
 snippet context_get
-context = self.env.get('res.users').context_get(cr, uid)
+context = self.env.get('res.users').context_get()
 endsnippet
 
 snippet idt

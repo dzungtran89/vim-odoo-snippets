@@ -1,0 +1,15 @@
+global !p
+from datetime import datetime
+def today():
+    return datetime.now().date()
+endglobal
+
+snippet header
+---
+title  : ${1}
+author : ${2}@trobz.com
+date   : `!p snip.rv=today()`
+tags   : ${3}
+---
+${4}
+endsnippet
